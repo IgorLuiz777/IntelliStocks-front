@@ -1,91 +1,141 @@
+"use client"
+
+import { useEffect } from "react"
+import Footer from "@/components/footer"
+import Header from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
-import { Package, Kanban, ArrowRight } from "lucide-react"
+import { Package, Kanban, ArrowRight, Zap } from "lucide-react"
 import Image from "next/image"
+import { motion } from "framer-motion"
 
 export default function Home() {
+  const containerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delayChildren: 0.3,
+        staggerChildren: 0.2
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.5 }
+    }
+  }
+
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
-      <header className="p-4 bg-white shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <Image src="/assets/intellistocks_logo(1).png" alt="IntelliStocks Logo" width={100} height={100} />
-          </div>
-          <nav>
-            <Button variant="ghost">Home</Button>
-            <Button variant="ghost">Contato</Button>
-            <Button variant="outline" className="ml-2">Estoques</Button>
-            <Button variant="outline" className="ml-2">Gestão</Button>
-          </nav>
-        </div>
-      </header>
-
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-100 text-gray-900">
+      <Header />
       <main className="flex-grow container mx-auto px-4 py-12">
-        <h2 className="text-4xl font-bold text-center text-blue-600 mb-12">
-          Bem-vindo ao IntelliStocks
-        </h2>
-        <p className="text-xl text-center text-gray-600 mb-12">
-          Sistema de Gerenciamento Inteligente para sua Empresa
-        </p>
-        <div className="grid md:grid-cols-2 gap-8">
-          <Card className="bg-white border-blue-200 border-2 hover:border-blue-400 transition-colors duration-300 shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-blue-600 flex items-center">
-                <Package className="mr-2" /> Gerenciamento de Estoques
-              </CardTitle>
-              <CardDescription className="text-gray-600">
-                Controle inteligente de produtos e fornecedores
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="w-full h-48 bg-blue-100 rounded-lg mb-4 flex items-center justify-center">
-                <Package className="w-24 h-24 text-blue-600" />
-              </div>
-              <p className="text-center mb-6 text-gray-700">
-              Acesse nosso sistema de gerenciamento de estoques de última geração, agora com IA integrada para previsão de demandas. 
-              Otimize seu inventário automaticamente, com email personalizado e automatico
-              garante que seu estoque estará sempre abastecido.
-              </p>
-            </CardContent>
-            <CardFooter className="flex justify-center">
-              <Button className="w-full max-w-xs font-bold text-white">
-                Acessar Estoques <ArrowRight className="ml-2" />
-              </Button>
-            </CardFooter>
-          </Card>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          className="flex flex-col md:flex-row items-center justify-between mb-16"
+        >
+          <motion.div variants={itemVariants} className="md:w-1/2 mb-8 md:mb-0">
+            <h1 className="text-5xl font-bold text-blue-600 mb-4">
+              Bem-vindo ao <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">IntelliStocks</span>
+            </h1>
+            <p className="text-2xl text-gray-700 mb-6">
+              Gerencie seus negócios de forma inteligente e personalizada com o nosso Sistema de Gestão completo.
+            </p>
+            <Button className="text-lg px-8 py-6 bg-gradient-to-r from-blue-600 to-cyan-500 
+            hover:from-blue-700 hover:to-cyan-600 transition-transform duration-300 transform hover:scale-105">
+              Comece Agora <Zap className="ml-2" />
+            </Button>
+          </motion.div>
+          <motion.div variants={itemVariants} className="md:w-1/2 flex justify-center">
+            <div >
+              <motion.div whileHover={{ scale: 1.1 }} >
+                <Image
+                  src="/assets/ai05.jpg"
+                  alt="IntelliStocks Dashboard"
+                  width={700}
+                  height={375}
+                  className="rounded-lg shadow-2xl"
+                />
+              </motion.div>
+            </div>
+          </motion.div>
+        </motion.div>
 
-          <Card className="bg-white border-blue-200 border-2 hover:border-blue-400 transition-colors duration-300 shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-blue-600 flex items-center">
-                <Kanban className="mr-2" /> Gestão Inteligente
-              </CardTitle>
-              <CardDescription className="text-gray-600">
-                Revolucione sua organização e planejamento
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="w-full h-48 bg-blue-100 rounded-lg mb-4 flex items-center justify-center">
-                <Kanban className="w-24 h-24 text-blue-600" />
-              </div>
-              <p className="text-center mb-6 text-gray-700">
-              Revolucione sua gestão com nossas ferramentas inovadoras. Utilize um calendário interativo que integra tarefas, 
-              notas e eventos da empresa, além de um sistema Kanban inteligente, tudo em um único lugar para otimizar sua organização e 
-              garantir máxima produtividade.
-              </p>
-            </CardContent>
-            <CardFooter className="flex justify-center">
-              <Button className="w-full max-w-xs font-bold text-white">
-                Acessar Gerenciamento <ArrowRight className="ml-2" />
-              </Button>
-            </CardFooter>
-          </Card>
-        </div>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          className="grid md:grid-cols-2 gap-8"
+        >
+          <motion.div variants={itemVariants}>
+            <Card className="bg-white border-blue-200 border-2 hover:border-blue-400 transition-all duration-300 
+            shadow-lg hover:shadow-xl transform hover:-translate-y-2">
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-blue-600 flex items-center">
+                  <Package className="mr-2" /> Gerenciamento de Estoques
+                </CardTitle>
+                <CardDescription className="text-gray-600">
+                  Controle inteligente de produtos e fornecedores
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="w-full h-48 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-lg mb-4 flex items-center justify-center">
+                  <Package className="w-24 h-24 text-blue-600" />
+                </div>
+                <p className="text-center mb-6 text-gray-700">
+                  Acesse nosso sistema de gerenciamento de estoques de última geração, agora com IA integrada para previsão de demandas.
+                  Otimize seu inventário automaticamente, com email personalizado e automático para garantir que seu estoque esteja
+                  sempre abastecido.
+                </p>
+              </CardContent>
+              <CardFooter className="flex justify-center">
+                <Button className="w-full max-w-xs font-bold text-white bg-gradient-to-r 
+                from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600">
+                  Acessar Estoques <ArrowRight className="ml-2" />
+                </Button>
+              </CardFooter>
+            </Card>
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <Card className="bg-white border-blue-200 border-2 hover:border-blue-400 
+            transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-2">
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-blue-600 flex items-center">
+                  <Kanban className="mr-2" /> Gestão Inteligente
+                </CardTitle>
+                <CardDescription className="text-gray-600">
+                  Revolucione sua organização e planejamento
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="w-full h-48 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-lg mb-4 flex items-center justify-center">
+                  <Kanban className="w-24 h-24 text-blue-600" />
+                </div>
+                <p className="text-center mb-6 text-gray-700">
+                  Revolucione sua gestão com nossas ferramentas inovadoras. Utilize um calendário interativo que integra tarefas,
+                  notas e eventos da empresa, além de um sistema Kanban inteligente, tudo em um único lugar para otimizar sua organização e
+                  garantir máxima produtividade.
+                </p>
+              </CardContent>
+              <CardFooter className="flex justify-center">
+                <Button className="w-full max-w-xs font-bold text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700
+                 hover:to-cyan-600">
+                  Acessar Gerenciamento <ArrowRight className="ml-2" />
+                </Button>
+              </CardFooter>
+            </Card>
+          </motion.div>
+        </motion.div>
       </main>
-
-      <footer className="bg-gray-100 text-gray-600 p-4 text-center border-t border-gray-200">
-        <p>&copy; 2023 IntelliStocks. Todos os direitos reservados.</p>
-        <p className="mt-2 text-sm">Impulsionando o futuro dos negócios com gestão inteligente</p>
-      </footer>
+      <Footer />
     </div>
   )
 }
