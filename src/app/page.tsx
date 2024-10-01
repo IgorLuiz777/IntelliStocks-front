@@ -55,10 +55,10 @@ export default function Home() {
           </motion.div>
           <motion.div variants={itemVariants} className="md:w-1/2 flex justify-center">
             <div >
-              <motion.div whileHover={{ scale: 1.1 }} >
+              <motion.div whileHover={{ scale: 1.02 }} >
                 <Image
                   src="/assets/ai05.jpg"
-                  alt="IntelliStocks Dashboard"
+                  alt="IntelliStocks Image 01"
                   width={700}
                   height={375}
                   className="rounded-lg shadow-2xl"

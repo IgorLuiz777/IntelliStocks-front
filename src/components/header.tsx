@@ -7,7 +7,7 @@ export default function Header() {
         <header className="p-4 bg-white shadow-md">
             <div className="container mx-auto flex justify-between items-center">
                 <div className="flex items-center space-x-4">
-                    <Image src="/assets/intellistocks_logo(1).png" alt="IntelliStocks Logo" 
+                    <Image src="/assets/intellistocks_logo(1).webp" alt="IntelliStocks Logo" 
                     width={100} height={100} />
                 </div>
                 <nav>
