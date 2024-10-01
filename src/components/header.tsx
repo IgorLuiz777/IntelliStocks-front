@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default function Header() {
 
@@ -11,10 +12,10 @@ export default function Header() {
                     width={100} height={100} />
                 </div>
                 <nav>
-                    <Button variant="ghost">Home</Button>
+                    <Link href="/"><Button variant="ghost">Home</Button></Link>
                     <Button variant="ghost">Contato</Button>
-                    <Button variant="outline" className="ml-2">Estoques</Button>
-                    <Button variant="outline" className="ml-2">Gestão</Button>
+                    <Link href="/forms/signin"><Button variant="outline" className="ml-2">Estoques</Button></Link>
+                    <Link href="/forms/signin"><Button variant="outline" className="ml-2">Gestão</Button></Link>
                 </nav>
             </div>
         </header>

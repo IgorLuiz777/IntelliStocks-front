@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Package, Kanban, ArrowRight, Zap } from "lucide-react"
 import Image from "next/image"
 import { motion } from "framer-motion"
+import Link from "next/link"
 
 export default function Home() {
   const containerVariants = {
@@ -48,10 +49,12 @@ export default function Home() {
             <p className="text-2xl text-gray-700 mb-6">
               Gerencie seus negócios de forma inteligente e personalizada com o nosso Sistema de Gestão completo.
             </p>
-            <Button className="text-lg px-8 py-6 bg-gradient-to-r from-blue-600 to-cyan-500 
-            hover:from-blue-700 hover:to-cyan-600 transition-transform duration-300 transform hover:scale-105">
-              Comece Agora <Zap className="ml-2" />
-            </Button>
+            <Link href={"/forms/signup"}>
+              <Button className="text-lg px-8 py-6 bg-gradient-to-r from-blue-600 to-cyan-500 
+              hover:from-blue-700 hover:to-cyan-600 transition-transform duration-300 transform hover:scale-105">
+                Comece Agora <Zap className="ml-2" />
+              </Button>
+            </Link>
           </motion.div>
           <motion.div variants={itemVariants} className="md:w-1/2 flex justify-center">
             <div >
@@ -96,10 +99,12 @@ export default function Home() {
                 </p>
               </CardContent>
               <CardFooter className="flex justify-center">
-                <Button className="w-full max-w-xs font-bold text-white bg-gradient-to-r 
-                from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600">
-                  Acessar Estoques <ArrowRight className="ml-2" />
-                </Button>
+                <Link href={"/forms/signin"}>
+                  <Button className="w-full max-w-xs font-bold text-white bg-gradient-to-r 
+                  from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600">
+                    Acessar Estoques <ArrowRight className="ml-2" />
+                  </Button>
+                </Link>
               </CardFooter>
             </Card>
           </motion.div>
@@ -126,10 +131,12 @@ export default function Home() {
                 </p>
               </CardContent>
               <CardFooter className="flex justify-center">
-                <Button className="w-full max-w-xs font-bold text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700
-                 hover:to-cyan-600">
-                  Acessar Gerenciamento <ArrowRight className="ml-2" />
-                </Button>
+                <Link href={"/forms/signin"}>
+                  <Button className="w-full max-w-xs font-bold text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700
+                  hover:to-cyan-600">
+                    Acessar Gerenciamento <ArrowRight className="ml-2" />
+                  </Button>
+                </Link>
               </CardFooter>
             </Card>
           </motion.div>
