@@ -49,6 +49,7 @@ import { CaretSortIcon } from "@radix-ui/react-icons"
 import { CheckIcon, Package, Search } from "lucide-react"
 import { useEffect, useState } from "react"
 import { getAllProducts } from "../actions/stocks/getAllProducts"
+import { getAllTypeProducts } from "../actions/stocks/getAllTypeProducts"
 
 export default function Stocks() {
     const [products, setProducts] = useState<Product[]>([])
@@ -57,13 +58,19 @@ export default function Stocks() {
     const itemsPerPage = 5
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState("")
+    const [typeProducts, setTypeProducts] = useState<TypeProduct[]>([])
 
     useEffect(() => {
         const fetchProducts = async () => {
             const productsData: Product[] = await getAllProducts();
             setProducts(productsData);
         };
+        const fetchTypeProducts = async () => {
+            const typeProductsData: TypeProduct[] = await getAllTypeProducts();
+            setTypeProducts(typeProductsData);
+        }
         fetchProducts();
+        fetchTypeProducts();
     }, []);
 
     const filteredProdutos = Array.isArray(products) ? products.filter(product =>
@@ -86,17 +93,6 @@ export default function Stocks() {
     const handlePageChange = (page: number) => {
         setCurrentPage(page)
     }
-
-    const categorias = [
-        {
-            value: "Furniture",
-            label: "Furniture",
-        },
-        {
-            value: "Electronics",
-            label: "Electronics",
-        }
-    ]
 
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-100 text-gray-900">
@@ -150,7 +146,7 @@ export default function Stocks() {
                                                     className="col-span-3 justify-between"
                                                 >
                                                     {value
-                                                        ? categorias.find((categoria) => categoria.value === value)?.label
+                                                        ? typeProducts.find((typeProduct) => typeProduct.name === value)?.name
                                                         : "Selecione uma categoria..."}
                                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                 </Button>
@@ -159,22 +155,22 @@ export default function Stocks() {
                                                 <Command>
                                                     <CommandInput placeholder="Pesquise a categoria..." className="h-9" />
                                                     <CommandList>
-                                                        <CommandEmpty>No framework found.</CommandEmpty>
+                                                        <CommandEmpty>Categoria não encontrada!</CommandEmpty>
                                                         <CommandGroup>
-                                                            {categorias.map((categoria) => (
+                                                            {typeProducts.map((typeProduct) => (
                                                                 <CommandItem
-                                                                    key={categoria.value}
-                                                                    value={categoria.value}
+                                                                    key={typeProduct.id}
+                                                                    value={typeProduct.name}
                                                                     onSelect={(currentValue) => {
                                                                         setValue(currentValue === value ? "" : currentValue)
                                                                         setOpen(false)
                                                                     }}
                                                                 >
-                                                                    {categoria.label}
+                                                                    {typeProduct.name}
                                                                     <CheckIcon
                                                                         className={cn(
                                                                             "ml-auto h-4 w-4",
-                                                                            value === categoria.value ? "opacity-100" : "opacity-0"
+                                                                            value === typeProduct.name ? "opacity-100" : "opacity-0"
                                                                         )}
                                                                     />
                                                                 </CommandItem>

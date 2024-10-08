@@ -8,3 +8,9 @@ interface Product {
     brand: string,
     quantity: number
 }
+
+interface TypeProduct {
+    id: number,
+    name: string,
+    Product: []
+}
