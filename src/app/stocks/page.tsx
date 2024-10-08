@@ -13,22 +13,48 @@ import {
 import {
     Pagination,
     PaginationContent,
-    PaginationEllipsis,
     PaginationItem,
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { cn } from "@/lib/utils"
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from "@/components/ui/command"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Search, Package } from "lucide-react"
+import { Search, Package, CheckIcon } from "lucide-react"
 import { getAllProducts } from "../actions/stocks/getAllProducts"
+import { CaretSortIcon } from "@radix-ui/react-icons"
 
 export default function Stocks() {
     const [products, setProducts] = useState<Product[]>([])
     const [searchTerm, setSearchTerm] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
     const itemsPerPage = 5
+    const [open, setOpen] = useState(false)
+    const [value, setValue] = useState("")
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -59,11 +85,22 @@ export default function Stocks() {
         setCurrentPage(page)
     }
 
+    const categorias = [
+        {
+            value: "Furniture",
+            label: "Furniture",
+        },
+        {
+            value: "Electronics",
+            label: "Electronics",
+        }
+    ]
+
     return (
         <div className="container mx-auto p-4">
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold flex items-center">
+                    <CardTitle className="text-2xl font-bold flex items-center text-blue-600">
                         <Package className="mr-2" />
                         Produtos
                     </CardTitle>
@@ -79,7 +116,109 @@ export default function Stocks() {
                                 className="pl-8"
                             />
                         </div>
-                        <Button>Adicionar Produto</Button>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button>Adicionar Produto</Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[425px]">
+                                <DialogHeader>
+                                    <DialogTitle>Adicionar Produto</DialogTitle>
+                                    <DialogDescription>
+                                        Credenciais para adição de um novo
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="name" className="text-right">
+                                            Name
+                                        </Label>
+                                        <Input id="name" placeholder="Digite o nome do produto" className="col-span-3" />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="typeProduct" className="text-right">
+                                            Categoria
+                                        </Label>
+                                        <Popover open={open} onOpenChange={setOpen}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    aria-expanded={open}
+                                                    className="col-span-3 justify-between"
+                                                >
+                                                    {value
+                                                        ? categorias.find((categoria) => categoria.value === value)?.label
+                                                        : "Selecione uma categoria..."}
+                                                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="col-span-3 p-0">
+                                                <Command>
+                                                    <CommandInput placeholder="Pesquise a categoria..." className="h-9" />
+                                                    <CommandList>
+                                                        <CommandEmpty>No framework found.</CommandEmpty>
+                                                        <CommandGroup>
+                                                            {categorias.map((categoria) => (
+                                                                <CommandItem
+                                                                    key={categoria.value}
+                                                                    value={categoria.value}
+                                                                    onSelect={(currentValue) => {
+                                                                        setValue(currentValue === value ? "" : currentValue)
+                                                                        setOpen(false)
+                                                                    }}
+                                                                >
+                                                                    {categoria.label}
+                                                                    <CheckIcon
+                                                                        className={cn(
+                                                                            "ml-auto h-4 w-4",
+                                                                            value === categoria.value ? "opacity-100" : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                </CommandItem>
+                                                            ))}
+                                                        </CommandGroup>
+                                                    </CommandList>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="price" className="text-right">
+                                            Preço
+                                        </Label>
+                                        <Input id="price" placeholder="Digite o preço do produto" className="col-span-3" />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="desc" className="text-right">
+                                            Descrição
+                                        </Label>
+                                        <Input id="desc" placeholder="Digite a descrição do produto" className="col-span-3" />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="model" className="text-right">
+                                            Modleo
+                                        </Label>
+                                        <Input id="model" placeholder="Digite o modelo do produto" className="col-span-3" />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="brand" className="text-right">
+                                            Marca
+                                        </Label>
+                                        <Input id="brand" placeholder="Digite a marca do produto" className="col-span-3" />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="quantity" className="text-right">
+                                            Quantidade
+                                        </Label>
+                                        <Input id="brand" placeholder="Digite a marca do produto" className="col-span-3" />
+                                    </div>
+                                </div>
+                                <DialogFooter>
+                                    <Button type="submit">Save changes</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+
                     </div>
                     <Table>
                         <TableHeader>
