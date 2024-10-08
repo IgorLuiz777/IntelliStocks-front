@@ -1,33 +1,9 @@
 "use client"
-import { useEffect, useState } from "react"
+import Footer from "@/components/footer"
+import Header from "@/components/header"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import { cn } from "@/lib/utils"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
     Command,
     CommandEmpty,
@@ -37,16 +13,42 @@ import {
     CommandList,
 } from "@/components/ui/command"
 import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination"
+import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Search, Package, CheckIcon } from "lucide-react"
-import { getAllProducts } from "../actions/stocks/getAllProducts"
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import { cn } from "@/lib/utils"
 import { CaretSortIcon } from "@radix-ui/react-icons"
+import { CheckIcon, Package, Search } from "lucide-react"
+import { useEffect, useState } from "react"
+import { getAllProducts } from "../actions/stocks/getAllProducts"
 
 export default function Stocks() {
     const [products, setProducts] = useState<Product[]>([])
@@ -97,8 +99,9 @@ export default function Stocks() {
     ]
 
     return (
-        <div className="container mx-auto p-4">
-            <Card>
+        <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-100 text-gray-900">
+            <Header />
+            <Card className="container mx-auto p-4 m-10">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold flex items-center text-blue-600">
                         <Package className="mr-2" />
@@ -250,12 +253,14 @@ export default function Stocks() {
                         <PaginationContent>
                             <PaginationItem>
                                 <PaginationPrevious
+                                    className="cursor-pointer"
                                     onClick={() => handlePageChange(currentPage - 1)}
                                 />
                             </PaginationItem>
                             {[...Array(totalPages)].map((_, index) => (
                                 <PaginationItem key={index}>
                                     <PaginationLink
+                                        className="cursor-pointer"
                                         onClick={() => handlePageChange(index + 1)}
                                         isActive={currentPage === index + 1}
                                     >
@@ -265,6 +270,7 @@ export default function Stocks() {
                             ))}
                             <PaginationItem>
                                 <PaginationNext
+                                    className="cursor-pointer"
                                     onClick={() => handlePageChange(currentPage + 1)}
                                 />
                             </PaginationItem>
@@ -272,6 +278,7 @@ export default function Stocks() {
                     </Pagination>
                 </CardContent>
             </Card>
+            <Footer />
         </div>
     )
 }
