@@ -50,15 +50,55 @@ import { CheckIcon, Package, Search } from "lucide-react"
 import { useEffect, useState } from "react"
 import { getAllProducts } from "../actions/stocks/getAllProducts"
 import { getAllTypeProducts } from "../actions/stocks/getAllTypeProducts"
+import { createProduct } from "../actions/stocks/postProduct"
+
+interface FormState {
+    name: string;
+    typeProductId: number;
+    price: string;
+    description: string;
+    model: string;
+    brand: string;
+    quantity: string;
+}
 
 export default function Stocks() {
-    const [products, setProducts] = useState<Product[]>([])
-    const [searchTerm, setSearchTerm] = useState("")
-    const [currentPage, setCurrentPage] = useState(1)
-    const itemsPerPage = 5
-    const [open, setOpen] = useState(false)
-    const [value, setValue] = useState("")
-    const [typeProducts, setTypeProducts] = useState<TypeProduct[]>([])
+    const [products, setProducts] = useState<Product[]>([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+    const [open, setOpen] = useState(false);
+    const [typeProducts, setTypeProducts] = useState<TypeProduct[]>([]);
+    const [state, setState] = useState<FormState>({
+        name: '',
+        typeProductId: 0,
+        price: '',
+        description: '',
+        model: '',
+        brand: '',
+        quantity: '',
+    });
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        try {
+            await createProduct(state);
+            setState({
+                name: '',
+                typeProductId: 0,
+                price: '',
+                description: '',
+                model: '',
+                brand: '',
+                quantity: '',
+            });
+            setOpen(false);
+            window.location.reload();
+        } catch (error) {
+            console.error('Failed to submit form:', error);
+        }
+    };
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -68,31 +108,31 @@ export default function Stocks() {
         const fetchTypeProducts = async () => {
             const typeProductsData: TypeProduct[] = await getAllTypeProducts();
             setTypeProducts(typeProductsData);
-        }
+        };
         fetchProducts();
         fetchTypeProducts();
     }, []);
 
-    const filteredProdutos = Array.isArray(products) ? products.filter(product =>
+    const filteredProdutos = products.filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.typeProductName.toLowerCase().includes(searchTerm.toLowerCase())
-    ) : []
+    );
 
-    const totalPages = Math.ceil(filteredProdutos.length / itemsPerPage)
+    const totalPages = Math.ceil(filteredProdutos.length / itemsPerPage);
 
     const currentProdutos = filteredProdutos.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
-    )
+    );
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(event.target.value)
-        setCurrentPage(1)
-    }
+        setSearchTerm(event.target.value);
+        setCurrentPage(1);
+    };
 
     const handlePageChange = (page: number) => {
-        setCurrentPage(page)
-    }
+        setCurrentPage(page);
+    };
 
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-100 text-gray-900">
@@ -126,17 +166,19 @@ export default function Stocks() {
                                         Credenciais para adição de um novo
                                     </DialogDescription>
                                 </DialogHeader>
-                                <div className="grid gap-4 py-4">
+                                <form className="grid gap-4 py-4" onSubmit={handleSubmit}>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="name" className="text-right">
-                                            Name
-                                        </Label>
-                                        <Input id="name" placeholder="Digite o nome do produto" className="col-span-3" />
+                                        <Label htmlFor="name" className="text-right">Nome</Label>
+                                        <Input
+                                            id="name"
+                                            value={state.name}
+                                            onChange={(e) => setState({ ...state, name: e.target.value })}
+                                            placeholder="Digite o nome do produto"
+                                            className="col-span-3"
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="typeProduct" className="text-right">
-                                            Categoria
-                                        </Label>
+                                        <Label htmlFor="typeProduct" className="text-right">Categoria</Label>
                                         <Popover open={open} onOpenChange={setOpen}>
                                             <PopoverTrigger asChild>
                                                 <Button
@@ -145,8 +187,8 @@ export default function Stocks() {
                                                     aria-expanded={open}
                                                     className="col-span-3 justify-between"
                                                 >
-                                                    {value
-                                                        ? typeProducts.find((typeProduct) => typeProduct.name === value)?.name
+                                                    {state.typeProductId
+                                                        ? typeProducts.find((typeProduct) => typeProduct.id === state.typeProductId)?.name
                                                         : "Selecione uma categoria..."}
                                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                 </Button>
@@ -161,16 +203,16 @@ export default function Stocks() {
                                                                 <CommandItem
                                                                     key={typeProduct.id}
                                                                     value={typeProduct.name}
-                                                                    onSelect={(currentValue) => {
-                                                                        setValue(currentValue === value ? "" : currentValue)
-                                                                        setOpen(false)
+                                                                    onSelect={() => {
+                                                                        setState({ ...state, typeProductId: typeProduct.id }); // Store the ID
+                                                                        setOpen(false);
                                                                     }}
                                                                 >
                                                                     {typeProduct.name}
                                                                     <CheckIcon
                                                                         className={cn(
                                                                             "ml-auto h-4 w-4",
-                                                                            value === typeProduct.name ? "opacity-100" : "opacity-0"
+                                                                            state.typeProductId === typeProduct.id ? "opacity-100" : "opacity-0"
                                                                         )}
                                                                     />
                                                                 </CommandItem>
@@ -182,42 +224,63 @@ export default function Stocks() {
                                         </Popover>
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="price" className="text-right">
-                                            Preço
-                                        </Label>
-                                        <Input id="price" placeholder="Digite o preço do produto" className="col-span-3" />
+                                        <Label htmlFor="price" className="text-right">Preço</Label>
+                                        <Input
+                                            id="price"
+                                            type="number"
+                                            value={state.price}
+                                            onChange={(e) => setState({ ...state, price: e.target.value })}
+                                            placeholder="Digite o preço do produto"
+                                            className="col-span-3"
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="desc" className="text-right">
-                                            Descrição
-                                        </Label>
-                                        <Input id="desc" placeholder="Digite a descrição do produto" className="col-span-3" />
+                                        <Label htmlFor="description" className="text-right">Descrição</Label>
+                                        <Input
+                                            id="description"
+                                            value={state.description}
+                                            onChange={(e) => setState({ ...state, description: e.target.value })}
+                                            placeholder="Digite a descrição do produto"
+                                            className="col-span-3"
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="model" className="text-right">
-                                            Modleo
-                                        </Label>
-                                        <Input id="model" placeholder="Digite o modelo do produto" className="col-span-3" />
+                                        <Label htmlFor="model" className="text-right">Modelo</Label>
+                                        <Input
+                                            id="model"
+                                            value={state.model}
+                                            onChange={(e) => setState({ ...state, model: e.target.value })}
+                                            placeholder="Digite o modelo do produto"
+                                            className="col-span-3"
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="brand" className="text-right">
-                                            Marca
-                                        </Label>
-                                        <Input id="brand" placeholder="Digite a marca do produto" className="col-span-3" />
+                                        <Label htmlFor="brand" className="text-right">Marca</Label>
+                                        <Input
+                                            id="brand"
+                                            value={state.brand}
+                                            onChange={(e) => setState({ ...state, brand: e.target.value })}
+                                            placeholder="Digite a marca do produto"
+                                            className="col-span-3"
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="quantity" className="text-right">
-                                            Quantidade
-                                        </Label>
-                                        <Input id="brand" placeholder="Digite a marca do produto" className="col-span-3" />
+                                        <Label htmlFor="quantity" className="text-right">Quantidade</Label>
+                                        <Input
+                                            id="quantity"
+                                            type="number"
+                                            value={state.quantity}
+                                            onChange={(e) => setState({ ...state, quantity: e.target.value })}
+                                            placeholder="Digite a quantidade do produto"
+                                            className="col-span-3"
+                                        />
                                     </div>
-                                </div>
-                                <DialogFooter>
-                                    <Button type="submit">Save changes</Button>
-                                </DialogFooter>
+                                    <DialogFooter>
+                                        <Button type="submit">Criar Produto</Button>
+                                    </DialogFooter>
+                                </form>
                             </DialogContent>
                         </Dialog>
-
                     </div>
                     <Table>
                         <TableHeader>
@@ -276,5 +339,5 @@ export default function Stocks() {
             </Card>
             <Footer />
         </div>
-    )
+    );
 }
