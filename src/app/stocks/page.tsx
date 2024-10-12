@@ -46,7 +46,7 @@ import {
 } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
 import { CaretSortIcon } from "@radix-ui/react-icons"
-import { CheckIcon, Package, Search } from "lucide-react"
+import { CheckIcon, Loader2, Package, PackagePlus, PackageSearch, Pencil, Search, Trash } from "lucide-react"
 import { useEffect, useState } from "react"
 import { getAllProducts } from "../actions/stocks/getAllProducts"
 import { getAllTypeProducts } from "../actions/stocks/getAllTypeProducts"
@@ -78,6 +78,7 @@ export default function Stocks() {
         brand: '',
         quantity: '',
     });
+    const [loading, setLoading] = useState(Boolean)
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -102,16 +103,36 @@ export default function Stocks() {
 
     useEffect(() => {
         const fetchProducts = async () => {
-            const productsData: Product[] = await getAllProducts();
-            setProducts(productsData);
+            setLoading(true);
+            try {
+                const productsData: Product[] = await getAllProducts();
+                setProducts(productsData);
+                setLoading(false)
+            } catch (error) {
+                console.log(error);
+            }
         };
         const fetchTypeProducts = async () => {
-            const typeProductsData: TypeProduct[] = await getAllTypeProducts();
-            setTypeProducts(typeProductsData);
+            setLoading(true);
+            try {
+                const typeProductsData: TypeProduct[] = await getAllTypeProducts();
+                setTypeProducts(typeProductsData);
+                setLoading(false)
+            } catch (error) {
+                console.log(error);
+            }
         };
         fetchProducts();
         fetchTypeProducts();
     }, []);
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <Loader2 className="animate-spin text-blue-600" size={48} />
+            </div>
+        );
+    }
 
     const filteredProdutos = products.filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -204,7 +225,7 @@ export default function Stocks() {
                                                                     key={typeProduct.id}
                                                                     value={typeProduct.name}
                                                                     onSelect={() => {
-                                                                        setState({ ...state, typeProductId: typeProduct.id }); // Store the ID
+                                                                        setState({ ...state, typeProductId: typeProduct.id });
                                                                         setOpen(false);
                                                                     }}
                                                                 >
@@ -289,6 +310,10 @@ export default function Stocks() {
                                 <TableHead>Categoria</TableHead>
                                 <TableHead className="text-right">Preço</TableHead>
                                 <TableHead className="text-center">Quantidade</TableHead>
+                                <TableHead className="text-center">Detalhe</TableHead>
+                                <TableHead className="text-center">Movimentação</TableHead>
+                                <TableHead className="text-center">Editar</TableHead>
+                                <TableHead className="text-center">Excluir</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -300,9 +325,29 @@ export default function Stocks() {
                                         {product.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        <Badge variant="outline">
+                                        <Badge variant="outline" className="text-sm">
                                             {product.quantity}
                                         </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                        <Button variant='outline' size='icon' >
+                                            <PackageSearch />
+                                        </Button>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                        <Button variant='default' size='icon' >
+                                            <PackagePlus />
+                                        </Button>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                        <Button size='icon' className="bg-amber-400 hover:bg-amber-300">
+                                            <Pencil />
+                                        </Button>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                        <Button variant="destructive" size='icon'>
+                                            <Trash />
+                                        </Button>
                                     </TableCell>
                                 </TableRow>
                             ))}
