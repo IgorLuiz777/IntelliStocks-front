@@ -51,6 +51,8 @@ import { useEffect, useState } from "react"
 import { getAllProducts } from "../actions/stocks/getAllProducts"
 import { getAllTypeProducts } from "../actions/stocks/getAllTypeProducts"
 import { createProduct } from "../actions/stocks/postProduct"
+import { useRouter } from "next/navigation"
+import { ProductDetails } from "@/components/productDetail"
 
 interface FormState {
     name: string;
@@ -63,6 +65,7 @@ interface FormState {
 }
 
 export default function Stocks() {
+    const router = useRouter();
     const [products, setProducts] = useState<Product[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -79,6 +82,10 @@ export default function Stocks() {
         quantity: '',
     });
     const [loading, setLoading] = useState(Boolean)
+
+    const handleDetailClick = (productId: number) => {
+        router.push(`/stocks/${productId}`);
+    };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -158,7 +165,7 @@ export default function Stocks() {
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-100 text-gray-900">
             <Header />
-            <Card className="container mx-auto p-4 m-10">
+            <Card className="container p-4 m-auto justify-center items-center">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold flex items-center text-blue-600">
                         <Package className="mr-2" />
@@ -330,10 +337,27 @@ export default function Stocks() {
                                         </Badge>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        <Button variant='outline' size='icon' >
-                                            <PackageSearch />
-                                        </Button>
+                                        <Dialog>
+                                            <DialogTrigger asChild>
+                                                <Button variant='outline' size='icon'>
+                                                    <PackageSearch />
+                                                </Button>
+                                            </DialogTrigger>
+
+                                            <DialogContent className="sm:max-w-[425px]">
+                                                <DialogHeader>
+                                                    <DialogTitle>Detalhes do Produto</DialogTitle>
+                                                </DialogHeader>
+
+                                                <ProductDetails productId={product.id} />
+
+                                                <DialogFooter>
+                                                    <Button onClick={() => console.log("Fechar modal")}>Fechar</Button>
+                                                </DialogFooter>
+                                            </DialogContent>
+                                        </Dialog>
                                     </TableCell>
+
                                     <TableCell className="text-center">
                                         <Button variant='default' size='icon' >
                                             <PackagePlus />
