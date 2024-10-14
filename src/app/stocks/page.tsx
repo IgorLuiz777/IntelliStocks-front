@@ -51,9 +51,9 @@ import { useEffect, useState } from "react"
 import { getAllProducts } from "../actions/stocks/getAllProducts"
 import { getAllTypeProducts } from "../actions/stocks/getAllTypeProducts"
 import { createProduct } from "../actions/stocks/postProduct"
-import { useRouter } from "next/navigation"
 import { ProductDetails } from "@/components/productDetail"
-
+import { deleteProduct } from "../actions/stocks/delete"
+import { Toaster } from 'react-hot-toast';
 interface FormState {
     name: string;
     typeProductId: number;
@@ -65,7 +65,6 @@ interface FormState {
 }
 
 export default function Stocks() {
-    const router = useRouter();
     const [products, setProducts] = useState<Product[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -82,10 +81,6 @@ export default function Stocks() {
         quantity: '',
     });
     const [loading, setLoading] = useState(Boolean)
-
-    const handleDetailClick = (productId: number) => {
-        router.push(`/stocks/${productId}`);
-    };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -105,6 +100,15 @@ export default function Stocks() {
             window.location.reload();
         } catch (error) {
             console.error('Failed to submit form:', error);
+        }
+    };
+
+    const handleDeleteProduct = async (productId: number) => {
+        try {
+            await deleteProduct(productId);
+            setProducts((prevProducts) => prevProducts.filter(product => product.id !== productId));
+        } catch (error) {
+            console.error('Error deleting product:', error);
         }
     };
 
@@ -173,6 +177,7 @@ export default function Stocks() {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
+                    <Toaster position="top-center" reverseOrder={false} />
                     <div className="flex justify-between items-center mb-4">
                         <div className="relative w-full max-w-sm">
                             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -369,8 +374,10 @@ export default function Stocks() {
                                         </Button>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        <Button variant="destructive" size='icon'>
-                                            <Trash />
+                                        <Button variant="destructive" size="icon"
+                                            onClick={() => handleDeleteProduct(product.id)} // Handle delete click
+                                        >
+                                            <Trash className="w-4 h-4" />
                                         </Button>
                                     </TableCell>
                                 </TableRow>
