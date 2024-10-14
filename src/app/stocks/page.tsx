@@ -54,6 +54,8 @@ import { createProduct } from "../actions/stocks/postProduct"
 import { ProductDetails } from "@/components/productDetail"
 import { deleteProduct } from "../actions/stocks/delete"
 import { Toaster } from 'react-hot-toast';
+import { ProductEdit } from "@/components/productEdit"
+
 interface FormState {
     name: string;
     typeProductId: number;
@@ -169,7 +171,7 @@ export default function Stocks() {
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-100 text-gray-900">
             <Header />
-            <Card className="container p-4 m-auto justify-center items-center">
+            <Card className="container p-4 m-auto justify-center items-center my-10">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold flex items-center text-blue-600">
                         <Package className="mr-2" />
@@ -355,10 +357,6 @@ export default function Stocks() {
                                                 </DialogHeader>
 
                                                 <ProductDetails productId={product.id} />
-
-                                                <DialogFooter>
-                                                    <Button onClick={() => console.log("Fechar modal")}>Fechar</Button>
-                                                </DialogFooter>
                                             </DialogContent>
                                         </Dialog>
                                     </TableCell>
@@ -369,15 +367,27 @@ export default function Stocks() {
                                         </Button>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        <Button size='icon' className="bg-amber-400 hover:bg-amber-300">
+                                    <Dialog>
+                                            <DialogTrigger asChild>
+                                            <Button size='icon' className="bg-amber-400 hover:bg-amber-300">
                                             <Pencil />
                                         </Button>
+                                            </DialogTrigger>
+
+                                            <DialogContent className="sm:max-w-[425px]">
+                                                <DialogHeader>
+                                                    <DialogTitle>Editar Produto:</DialogTitle>
+                                                </DialogHeader>
+
+                                                <ProductEdit productId={product.id} />
+                                            </DialogContent>
+                                        </Dialog>
                                     </TableCell>
                                     <TableCell className="text-center">
                                         <Button variant="destructive" size="icon"
-                                            onClick={() => handleDeleteProduct(product.id)} // Handle delete click
+                                            onClick={() => handleDeleteProduct(product.id)}
                                         >
-                                            <Trash className="w-4 h-4" />
+                                            <Trash className="w-4 h-4" strokeWidth={3} />
                                         </Button>
                                     </TableCell>
                                 </TableRow>

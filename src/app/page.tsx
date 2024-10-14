@@ -57,16 +57,13 @@ export default function Home() {
             </Link>
           </motion.div>
           <motion.div variants={itemVariants} className="md:w-1/2 flex justify-center">
-            <div >
-              <motion.div whileHover={{ scale: 1.02 }} >
+            <div>
                 <Image
-                  src="/assets/ai05.jpg"
+                  src="/assets/Marketing-bro.svg"
                   alt="IntelliStocks Image 01"
                   width={700}
                   height={375}
-                  className="rounded-lg shadow-2xl"
                 />
-              </motion.div>
             </div>
           </motion.div>
         </motion.div>
