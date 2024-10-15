@@ -99,7 +99,9 @@ export default function Stocks() {
                 quantity: '',
             });
             setOpen(false);
-            window.location.reload();
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
         } catch (error) {
             console.error('Failed to submit form:', error);
         }

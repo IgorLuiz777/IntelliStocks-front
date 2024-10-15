@@ -27,7 +27,7 @@ import { useEffect, useState } from "react"
 import { getProductById } from "@/app/actions/stocks/getProductById"
 import { putProduct } from "@/app/actions/stocks/putProduct"
 import { getAllTypeProducts } from "@/app/actions/stocks/getAllTypeProducts"
-import toast, { Toaster } from "react-hot-toast"
+import toast from "react-hot-toast"
 
 interface ProductEditProps {
     productId: number;
@@ -60,14 +60,19 @@ export function ProductEdit({ productId }: ProductEditProps) {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-    
+
         // TODO: ARRUMAR TOAST DUPLICADO
 
         try {
-            await putProduct(state, productId);
-            toast.success('Produto editado com sucesso!', {
-                id: 'edit-success',
-              });
+            await toast.promise(
+                putProduct(state, productId),
+                {
+                    loading: 'Salvando...',
+                    success: <b>Produto Editado com sucesso!</b>,
+                    error: <b>Erro ao editar o produto!</b>,
+                }
+            );
+
             setState({
                 name: '',
                 typeProductId: 0,
@@ -80,21 +85,18 @@ export function ProductEdit({ productId }: ProductEditProps) {
             setOpen(false);
             setTimeout(() => {
                 window.location.reload();
-            }, 2300);  
+            }, 2000);
         } catch (error) {
-            toast.error('Erro ao editar o produto! Mude os valores!', {
-                id: 'edit-error',
-              });
             console.error('Failed to submit form:', error);
         }
     };
-    
+
     useEffect(() => {
         const fetchProduct = async () => {
             try {
                 const fetchedProduct = await getProductById(productId);
                 setProduct(fetchedProduct);
-    
+
                 setState({
                     name: fetchedProduct.name,
                     typeProductId: fetchedProduct.typeProductId,
@@ -104,14 +106,14 @@ export function ProductEdit({ productId }: ProductEditProps) {
                     brand: fetchedProduct.brand,
                     quantity: fetchedProduct.quantity.toString(),
                 });
-    
+
             } catch (error) {
                 console.error("Erro ao buscar o produto:", error);
             } finally {
                 setLoading(false);
             }
         };
-    
+
         const fetchTypeProducts = async () => {
             setLoading(true);
             try {
@@ -122,10 +124,10 @@ export function ProductEdit({ productId }: ProductEditProps) {
                 console.log(error);
             }
         };
-    
+
         fetchProduct();
         fetchTypeProducts();
-    }, [productId]);    
+    }, [productId]);
 
     if (loading) {
         return <Loader2 className="animate-spin" />;
@@ -137,7 +139,6 @@ export function ProductEdit({ productId }: ProductEditProps) {
 
     return (
         <div>
-            <Toaster />
             <form className="grid gap-4 py-4" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="name" className="text-right">Nome</Label>
@@ -187,6 +188,7 @@ export function ProductEdit({ productId }: ProductEditProps) {
                                                     )}
                                                 />
                                             </CommandItem>
+
                                         ))}
                                     </CommandGroup>
                                 </CommandList>
