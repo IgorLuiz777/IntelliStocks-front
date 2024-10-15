@@ -14,8 +14,7 @@ export default function Header() {
                 <nav>
                     <Link href="/"><Button variant="ghost">Home</Button></Link>
                     <Button variant="ghost">Contato</Button>
-                    <Link href="/forms/signin"><Button variant="outline" className="ml-2">Estoques</Button></Link>
-                    <Link href="/forms/signin"><Button variant="outline" className="ml-2">Gestão</Button></Link>
+                    <Link href="/forms/signin"><Button variant="outline" className="ml-2">Entrar</Button></Link>
                 </nav>
             </div>
         </header>

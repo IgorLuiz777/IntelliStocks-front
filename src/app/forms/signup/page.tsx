@@ -34,7 +34,7 @@ export default function SignUp() {
                                     Criar uma conta para acessar o sistema de estoques.
                                 </CardDescription>
                             </CardHeader>
-                            <TabsList className="grid grid-cols-2 mx-2 mb-4">
+                            <TabsList className="grid grid-cols-2 mx-6 mb-4">
                                 <TabsTrigger value="estoques">Estoques</TabsTrigger>
                                 <TabsTrigger value="gestao">Gestão</TabsTrigger>
                             </TabsList>
@@ -70,7 +70,7 @@ export default function SignUp() {
                                     Criar uma conta para acessar o sistema de gestão.
                                 </CardDescription>
                             </CardHeader>
-                            <TabsList className="grid grid-cols-2 mx-2 mb-4">
+                            <TabsList className="grid grid-cols-2 mx-6 mb-4">
                                 <TabsTrigger value="estoques">Estoques</TabsTrigger>
                                 <TabsTrigger value="gestao">Gestão</TabsTrigger>
                             </TabsList>
@@ -92,6 +92,9 @@ export default function SignUp() {
                                     <Input id="password" type="password" placeholder="Digite a senha" />
                                 </div>
                             </CardContent>
+                            <CardFooter>
+                                <Button>Criar Conta</Button>
+                            </CardFooter>
                             <CardFooter>
                                 <p className="mr-1">Fazer Login?</p>
                                 <Link href="/forms/signin" className="underline underline-offset-1 hover:text-blue-500">

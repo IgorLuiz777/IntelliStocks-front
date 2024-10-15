@@ -33,7 +33,7 @@ export default function SignIn() {
                                     Acessar o sistema de estoques.
                                 </CardDescription>
                             </CardHeader>
-                            <TabsList className="grid grid-cols-2 mx-2 mb-4">
+                            <TabsList className="grid grid-cols-2 mx-6 mb-4">
                                 <TabsTrigger value="estoques">Estoques</TabsTrigger>
                                 <TabsTrigger value="gestao">Gestão</TabsTrigger>
                             </TabsList>
@@ -65,7 +65,7 @@ export default function SignIn() {
                                     Acessar o sistema de gestão.
                                 </CardDescription>
                             </CardHeader>
-                            <TabsList className="grid grid-cols-2 mx-2 mb-4">
+                            <TabsList className="grid grid-cols-2 mx-6 mb-4">
                                 <TabsTrigger value="estoques">Estoques</TabsTrigger>
                                 <TabsTrigger value="gestao">Gestão</TabsTrigger>
                             </TabsList>
