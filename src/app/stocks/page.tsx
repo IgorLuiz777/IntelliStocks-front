@@ -55,6 +55,7 @@ import { ProductDetails } from "@/components/productDetail"
 import { deleteProduct } from "../actions/stocks/delete"
 import { Toaster } from 'react-hot-toast';
 import { ProductEdit } from "@/components/productEdit"
+import StockMovement from "@/components/stockMovement"
 
 interface FormState {
     name: string;
@@ -364,16 +365,28 @@ export default function Stocks() {
                                     </TableCell>
 
                                     <TableCell className="text-center">
-                                        <Button variant='default' size='icon' >
-                                            <PackagePlus />
-                                        </Button>
+                                        <Dialog>
+                                            <DialogTrigger asChild>
+                                                <Button variant='default' size='icon' >
+                                                    <PackagePlus />
+                                                </Button>
+                                            </DialogTrigger>
+                                            <DialogContent className="sm:max-w-[425px]">
+                                                <DialogHeader>
+                                                    <DialogTitle>Movimentações</DialogTitle>
+                                                </DialogHeader>
+
+                                                <StockMovement productId={product.id} />
+
+                                            </DialogContent>
+                                        </Dialog>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                    <Dialog>
+                                        <Dialog>
                                             <DialogTrigger asChild>
-                                            <Button size='icon' className="bg-amber-400 hover:bg-amber-300">
-                                            <Pencil />
-                                        </Button>
+                                                <Button size='icon' className="bg-amber-400 hover:bg-amber-300">
+                                                    <Pencil />
+                                                </Button>
                                             </DialogTrigger>
 
                                             <DialogContent className="sm:max-w-[425px]">

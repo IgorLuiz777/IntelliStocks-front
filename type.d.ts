@@ -9,6 +9,13 @@ interface Product {
     brand: string,
     quantity: number
 }
+interface Movement {
+    id: number;
+    product: Product;
+    quantity: number;
+    dateMovement: number[];
+    typeMovement: string;
+}
 
 interface TypeProduct {
     id: number,
